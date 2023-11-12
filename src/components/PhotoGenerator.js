@@ -4,14 +4,8 @@ import { Tooltip } from 'react-tooltip';
 
 const PHOTO_URL = 'http://jsonplaceholder.typicode.com/photos';
 
-const fetchPhotos = async () => {
-  const response = await fetch(`${PHOTO_URL}?_limit=50`);
-  const data = await response.json();
-  return data;
-};
-
+// A recursive function to randomize the photo list
 const randomizeArray = (array) => {
-  // A recursive function to randomize the photo list
   const randomize = (arr, index) => {
     if (index === 0) return arr;
     const randomIndex = Math.floor(Math.random() * (index + 1));
@@ -20,19 +14,44 @@ const randomizeArray = (array) => {
   };
   return randomize([...array], array.length - 1);
 };
+
+// generate 50 unique number from 1-5000
+const generateUniqueIds = () => {
+  const initialSet = new Set();
+  while (initialSet.size < 50) {
+    const randomNumber = Math.floor(Math.random() * 5000) + 1;
+    initialSet.add(randomNumber);
+  } 
+  const initialArray = Array.from(initialSet);
+  return initialArray;
+}
   
 const PhotoGenerator = () => {
   const [photos, setPhotos] = useState([]);
+  const [photoIds, setPhotoIds] = useState(generateUniqueIds());
+
+  const fetchPhotos = async () => {
+    try{
+      const photoPromises = photoIds.map(id => fetch(`${PHOTO_URL}/${id}`).then(res => res.json()));
+      const data = await Promise.all(photoPromises);
+      setPhotos(data);
+    } catch (error) {
+      console.error('Error fetching photos:', error);
+    }
+  };
 
   useEffect(() => {
-    fetchPhotos().then((data) => {
-      setPhotos(data);
-    });
-  }, []);
+    fetchPhotos();
+  }, [photoIds]);
 
   const handleShuffle = () => {
-    setPhotos(randomizeArray(photos));
+    const newArray = randomizeArray(photos);
+    setPhotos(newArray);
   };
+
+  const regeneratePhotos = () => {
+    setPhotoIds(generateUniqueIds());
+  }
 
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
@@ -61,8 +80,9 @@ const PhotoGenerator = () => {
         onClick={handleShuffle}>
           Shuffle Photos
       </button>
-      <button className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
-          Generate New Photos
+      <button className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+        onClick={regeneratePhotos}>
+          Regenerate Photos
       </button>
     </div>
   );
