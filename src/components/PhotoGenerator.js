@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { Tooltip } from 'react-tooltip';
+
 const PHOTO_URL = 'http://jsonplaceholder.typicode.com/photos';
 
 const fetchPhotos = async () => {
@@ -22,10 +24,14 @@ const PhotoGenerator = () => {
     <div className='flex flex-col justify-center items-center h-screen'>
       <div className='flex overflow-x-auto p-4 space-x-4 bg-gray-300 max-w-[80%]'>
         {photos.map((photo) => (
-          <div key={photo.id} className="flex-shrink-0 relative flex justify-center items-center">
-            <img  className="rounded-lg drop-shadow-lg border border-black w-32 h-32"
-              src={photo.thumbnailUrl} alt={photo.title} />
-            <p className="absolute text-black font-bold text-sm text-center break-words line-clamp-4 -rotate-45 max-w-[80%]">{photo.title}</p>
+          <div className='flex-shrink-0' key={"photoMap" + photo.id} >
+            <Tooltip key={"toolTip" + photo.id} id={photo.id} place='top' />
+            <div className="relative flex justify-center items-center"
+              data-tooltip-id={photo.id} data-tooltip-content={photo.title}>
+              <img className="rounded-lg drop-shadow-lg border border-black w-32 h-32"
+                src={photo.thumbnailUrl} alt={photo.title} />
+              <p className="absolute text-black font-bold text-sm text-center break-words line-clamp-4 -rotate-45 max-w-[80%]">{photo.title}</p>
+            </div>
           </div>
         ))}
       </div>
