@@ -9,9 +9,19 @@ const fetchPhotos = async () => {
   const data = await response.json();
   return data;
 };
+
+const randomizeArray = (array) => {
+  // A recursive function to randomize the photo list
+  const randomize = (arr, index) => {
+    if (index === 0) return arr;
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [arr[index], arr[randomIndex]] = [arr[randomIndex], arr[index]];
+    return randomize(arr, index - 1);
+  };
+  return randomize([...array], array.length - 1);
+};
   
 const PhotoGenerator = () => {
-
   const [photos, setPhotos] = useState([]);
 
   useEffect(() => {
@@ -20,6 +30,9 @@ const PhotoGenerator = () => {
     });
   }, []);
 
+  const handleShuffle = () => {
+    setPhotos(randomizeArray(photos));
+  };
 
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
@@ -32,9 +45,11 @@ const PhotoGenerator = () => {
                 <Tooltip id={photo.id} place='top'/>
                 <PhotoItem photo={ photo }/>
 
-                <Tooltip id={photo.id + 1} place='bottom'/>
                 {index + 1 < photos.length && (
-                  <PhotoItem photo={ photos[index + 1] } />
+                  <>
+                    <Tooltip id={photos[index + 1].id} place='bottom'/>
+                    <PhotoItem photo={ photos[index + 1] } />
+                  </>
                 )}
               </div>
             )
@@ -42,11 +57,12 @@ const PhotoGenerator = () => {
           return null;
         })}
       </div>
-      <button className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
-            Shuffle Photos
+      <button className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+        onClick={handleShuffle}>
+          Shuffle Photos
       </button>
       <button className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
-            Generate New Photos
+          Generate New Photos
       </button>
     </div>
   );
