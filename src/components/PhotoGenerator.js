@@ -4,6 +4,15 @@ import { Tooltip } from 'react-tooltip';
 
 const PHOTO_URL = 'http://jsonplaceholder.typicode.com/photos';
 
+const cachePhotos = (photos) => {
+  localStorage.setItem('photos', JSON.stringify(photos));
+};
+
+const getCachedPhotos = () => {
+  const cachedPhotos = JSON.parse(localStorage.getItem('photos'));
+  return cachedPhotos && cachedPhotos.length>0 ? cachedPhotos : null;
+};
+
 // A recursive function to randomize the photo list
 const randomizeArray = (array) => {
   const randomize = (arr, index) => {
@@ -35,22 +44,30 @@ const PhotoGenerator = () => {
       const photoPromises = photoIds.map(id => fetch(`${PHOTO_URL}/${id}`).then(res => res.json()));
       const data = await Promise.all(photoPromises);
       setPhotos(data);
+      cachePhotos(data);
     } catch (error) {
       console.error('Error fetching photos:', error);
     }
   };
 
   useEffect(() => {
-    fetchPhotos();
-  }, [photoIds]);
+    const cachedPhotos = getCachedPhotos();
+    if (cachedPhotos) {
+      setPhotos(cachedPhotos);
+    } else {
+      fetchPhotos();
+    }
+  }, []);
 
   const handleShuffle = () => {
     const newArray = randomizeArray(photos);
     setPhotos(newArray);
+    cachePhotos(newArray);
   };
 
   const regeneratePhotos = () => {
     setPhotoIds(generateUniqueIds());
+    fetchPhotos();
   }
 
   return (
