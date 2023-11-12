@@ -10,7 +10,7 @@ const PhotoItem = ({ photo }) => {
       data-tooltip-id={photo.id} data-tooltip-content={photo.title}>
       <img className="rounded-lg drop-shadow-lg border border-black w-32 h-32"
         src={photo.thumbnailUrl} alt={photo.title} />
-      <p className="absolute text-black font-bold text-sm text-center break-words line-clamp-4 -rotate-45 max-w-[80%]">
+      <p className="absolute text-black font-bold text-sm text-center break-words line-clamp-4 -rotate-45 max-w-[75%]">
         {photo.title}
       </p>
     </div>
