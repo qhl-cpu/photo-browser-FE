@@ -25,7 +25,7 @@ const PhotoGenerator = () => {
           <div key={photo.id} className="flex-shrink-0 relative flex justify-center items-center">
             <img  className="rounded-lg drop-shadow-lg border border-black w-32 h-32"
               src={photo.thumbnailUrl} alt={photo.title} />
-            <p className="photo-title">{photo.title}</p>
+            <p className="absolute text-black font-bold text-sm text-center break-words line-clamp-4 -rotate-45 max-w-[80%]">{photo.title}</p>
           </div>
         ))}
       </div>
