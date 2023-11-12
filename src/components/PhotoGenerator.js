@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PhotoItem from './PhotoItem';
 import { Tooltip } from 'react-tooltip';
 
 const PHOTO_URL = 'http://jsonplaceholder.typicode.com/photos';
@@ -23,17 +24,23 @@ const PhotoGenerator = () => {
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
       <div className='flex overflow-x-auto p-4 space-x-4 bg-gray-300 max-w-[80%]'>
-        {photos.map((photo) => (
-          <div className='flex-shrink-0' key={"photoMap" + photo.id} >
-            <Tooltip key={"toolTip" + photo.id} id={photo.id} place='top' />
-            <div className="relative flex justify-center items-center"
-              data-tooltip-id={photo.id} data-tooltip-content={photo.title}>
-              <img className="rounded-lg drop-shadow-lg border border-black w-32 h-32"
-                src={photo.thumbnailUrl} alt={photo.title} />
-              <p className="absolute text-black font-bold text-sm text-center break-words line-clamp-4 -rotate-45 max-w-[80%]">{photo.title}</p>
-            </div>
-          </div>
-        ))}
+        {photos.map((photo, index) => {
+          if (index % 2 === 0) { // Only render for even indices (0, 2, 4, ...)
+            return (
+              <div className='flex-shrink-0'
+                key={"photoMap" + photo.id} >
+                <Tooltip id={photo.id} place='top'/>
+                <PhotoItem photo={ photo }/>
+
+                <Tooltip id={photo.id + 1} place='bottom'/>
+                {index + 1 < photos.length && (
+                  <PhotoItem photo={ photos[index + 1] } />
+                )}
+              </div>
+            )
+          }
+          return null;
+        })}
       </div>
       <button className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
             Shuffle Photos
