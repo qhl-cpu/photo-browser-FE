@@ -22,8 +22,9 @@ const PhotoGenerator = () => {
     <div className='flex flex-col justify-center items-center h-screen'>
       <div className='flex overflow-x-auto p-4 space-x-4 bg-gray-300 max-w-[80%]'>
         {photos.map((photo) => (
-          <div key={photo.id} className="flex-shrink-0">
-            <img src={photo.thumbnailUrl} alt={photo.title} />
+          <div key={photo.id} className="flex-shrink-0 relative flex justify-center items-center">
+            <img  className="rounded-lg drop-shadow-lg border border-black w-32 h-32"
+              src={photo.thumbnailUrl} alt={photo.title} />
             <p className="photo-title">{photo.title}</p>
           </div>
         ))}
