@@ -19,19 +19,19 @@ const PhotoGenerator = () => {
 
 
   return (
-    <div>
-      <div className="photo-container">
+    <div className='flex flex-col justify-center items-center h-screen'>
+      <div className='flex overflow-x-auto p-4 space-x-4 bg-gray-300 max-w-[80%]'>
         {photos.map((photo) => (
-          <div key={photo.id} className="photo-card">
+          <div key={photo.id} className="flex-shrink-0">
             <img src={photo.thumbnailUrl} alt={photo.title} />
             <p className="photo-title">{photo.title}</p>
           </div>
         ))}
       </div>
-      <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      <button className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
             Shuffle Photos
       </button>
-      <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      <button className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
             Generate New Photos
       </button>
     </div>
