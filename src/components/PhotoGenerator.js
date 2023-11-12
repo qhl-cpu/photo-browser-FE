@@ -71,8 +71,8 @@ const PhotoGenerator = () => {
   }
 
   return (
-    <div className='flex flex-col justify-center items-center h-screen'>
-      <div className='grid grid-flow-col grid-rows-2 grid-cols-none overflow-x-scroll overflow-y-hidden rounded-xl bg-gray-300 p-4 max-w-[80%]'>
+    <div className='flex flex-col justify-center items-center h-screen bg-gradient-to-br from-teal-500 via-blue-500 to-green-300'>
+      <div className='grid grid-flow-col grid-rows-2 grid-cols-none overflow-x-scroll overflow-y-hidden rounded-xl bg-white bg-opacity-30 border-[15px] border-transparent p-4 max-w-[80%]'>
         {photos.map((photo, index) => {
           return (
             <div className='w-32 y-32 mx-2' key={"photoMap" + photo.id} >
@@ -82,14 +82,24 @@ const PhotoGenerator = () => {
           )
         })}
       </div>
-      <button className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+      <div className='flex items-center mt-4'>
+        <button className='mt-4 mx-5 w-48 h-16 bg-gradient-to-r from-teal-200 to-lime-200 rounded-lg cursor-pointer select-none
+        active:translate-y-2 active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
+        active:border-b-[0px]
+        transition-all duration-150 [box-shadow:0_10px_0_0_#ffffff,5px_10px_0_0_#ffffff]
+        border-b-[1px] border-blue-400'
         onClick={handleShuffle}>
           Shuffle Photos
-      </button>
-      <button className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+        </button>
+        <button className='mt-4 mx-5 w-48 h-16 bg-gradient-to-r from-teal-200 to-lime-200 rounded-lg cursor-pointer select-none
+        active:translate-y-2 active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
+        active:border-b-[0px]
+        transition-all duration-150 [box-shadow:0_10px_0_0_#ffffff,5px_10px_0_0_#ffffff]
+        border-b-[1px] border-blue-400'
         onClick={regeneratePhotos}>
           Regenerate Photos
-      </button>
+        </button>
+      </div>
     </div>
   );
 }
