@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PhotoItem from './PhotoItem';
 import { Tooltip } from 'react-tooltip';
+import confetti from "canvas-confetti";
 
 const PHOTO_URL = 'http://jsonplaceholder.typicode.com/photos';
 
@@ -47,10 +48,29 @@ const fetchWithRetry = async (url, retries, delay) => {
     }
   }
 };
+
+// add confetti to the button's location
+const triggerConfetti = (buttonRef) => {
+  if (buttonRef.current) {
+    const rect = buttonRef.current.getBoundingClientRect();
+    const originX = rect.left + rect.width / 2;
+    const originY = rect.top + rect.height / 2;
+    
+    confetti({
+      origin: {
+        x: originX / window.innerWidth,
+        y: originY / window.innerHeight
+      },
+      particleCount: 150
+    });
+  }
+};
   
 const PhotoGenerator = () => {
   const [photos, setPhotos] = useState([]);
   const [photoIds, setPhotoIds] = useState([]);
+  const shuffleRef = useRef(null);
+  const regenerateRef = useRef(null);
 
   const fetchPhotos = async () => {
     try{
@@ -84,10 +104,12 @@ const PhotoGenerator = () => {
     const newArray = randomizeArray(photos);
     setPhotos(newArray);
     cachePhotos(newArray);
+    triggerConfetti(shuffleRef);
   };
 
   const regeneratePhotos = () => {
     setPhotoIds(generateUniqueIds());
+    triggerConfetti(regenerateRef);
   }
 
   return (
@@ -103,20 +125,22 @@ const PhotoGenerator = () => {
         })}
       </div>
       <div className='flex items-center mt-4'>
-        <button className='mt-4 mx-5 w-48 h-16 bg-gradient-to-r from-teal-200 to-lime-200 rounded-lg cursor-pointer select-none
-        active:translate-y-2 active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
-        active:border-b-[0px]
-        transition-all duration-150 [box-shadow:0_10px_0_0_#ffffff,5px_10px_0_0_#ffffff]
-        border-b-[1px] border-blue-400'
-        onClick={handleShuffle}>
+        <button ref={shuffleRef}
+          className='mt-4 mx-5 w-48 h-16 bg-gradient-to-r from-teal-200 to-lime-200 rounded-lg cursor-pointer select-none
+            active:translate-y-2 active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
+            active:border-b-[0px]
+            transition-all duration-150 [box-shadow:0_10px_0_0_#ffffff,5px_10px_0_0_#ffffff]
+            border-b-[1px] border-blue-400'
+          onClick={handleShuffle}>
           Shuffle Photos
         </button>
-        <button className='mt-4 mx-5 w-48 h-16 bg-gradient-to-r from-teal-200 to-lime-200 rounded-lg cursor-pointer select-none
-        active:translate-y-2 active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
-        active:border-b-[0px]
-        transition-all duration-150 [box-shadow:0_10px_0_0_#ffffff,5px_10px_0_0_#ffffff]
-        border-b-[1px] border-blue-400'
-        onClick={regeneratePhotos}>
+        <button ref={regenerateRef}
+          className='mt-4 mx-5 w-48 h-16 bg-gradient-to-r from-teal-200 to-lime-200 rounded-lg cursor-pointer select-none
+            active:translate-y-2 active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
+            active:border-b-[0px]
+            transition-all duration-150 [box-shadow:0_10px_0_0_#ffffff,5px_10px_0_0_#ffffff]
+            border-b-[1px] border-blue-400'
+          onClick={regeneratePhotos}>
           Regenerate Photos
         </button>
       </div>
