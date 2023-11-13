@@ -50,7 +50,7 @@ const fetchWithRetry = async (url, retries, delay) => {
   
 const PhotoGenerator = () => {
   const [photos, setPhotos] = useState([]);
-  const [photoIds, setPhotoIds] = useState(generateUniqueIds());
+  const [photoIds, setPhotoIds] = useState([]);
 
   const fetchPhotos = async () => {
     try{
@@ -69,7 +69,7 @@ const PhotoGenerator = () => {
     if (cachedPhotos) {
       setPhotos(cachedPhotos);
     } else {
-      fetchPhotos();
+      setPhotoIds(generateUniqueIds());
     }
   }, []);
 
