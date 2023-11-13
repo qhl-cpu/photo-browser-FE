@@ -34,6 +34,19 @@ const generateUniqueIds = () => {
   const initialArray = Array.from(initialSet);
   return initialArray;
 }
+
+const fetchWithRetry = async (url, retries, delay) => {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      if (i === retries) throw error;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+};
   
 const PhotoGenerator = () => {
   const [photos, setPhotos] = useState([]);
@@ -41,7 +54,8 @@ const PhotoGenerator = () => {
 
   const fetchPhotos = async () => {
     try{
-      const photoPromises = photoIds.map(id => fetch(`${PHOTO_URL}/${id}`).then(res => res.json()));
+      // can also use PHOTO_URL/albums/albumId/photos for fetching all 50 photos in a album
+      const photoPromises = photoIds.map(id => fetchWithRetry(`${PHOTO_URL}/${id}`, 3, 1000));
       const data = await Promise.all(photoPromises);
       setPhotos(data);
       cachePhotos(data);
