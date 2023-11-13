@@ -73,6 +73,13 @@ const PhotoGenerator = () => {
     }
   }, []);
 
+  // ensure only fetching new photos when new photoIds are given
+  useEffect(() => {
+    if (photoIds.length > 0) {
+      fetchPhotos();
+    }
+  }, [photoIds]); // Runs fetchPhotos whenever photoIds changes
+
   const handleShuffle = () => {
     const newArray = randomizeArray(photos);
     setPhotos(newArray);
@@ -81,7 +88,6 @@ const PhotoGenerator = () => {
 
   const regeneratePhotos = () => {
     setPhotoIds(generateUniqueIds());
-    fetchPhotos();
   }
 
   return (
