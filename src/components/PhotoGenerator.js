@@ -65,10 +65,11 @@ const triggerConfetti = (buttonRef) => {
     });
   }
 };
-  
+
 const PhotoGenerator = () => {
   const [photos, setPhotos] = useState([]);
   const [photoIds, setPhotoIds] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const shuffleRef = useRef(null);
   const regenerateRef = useRef(null);
 
@@ -79,6 +80,7 @@ const PhotoGenerator = () => {
       const data = await Promise.all(photoPromises);
       setPhotos(data);
       cachePhotos(data);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching photos:', error);
     }
@@ -95,6 +97,7 @@ const PhotoGenerator = () => {
 
   // ensure only fetching new photos when new photoIds are given
   useEffect(() => {
+    setIsLoading(true);
     if (photoIds.length > 0) {
       fetchPhotos();
     }
@@ -119,7 +122,7 @@ const PhotoGenerator = () => {
           return (
             <div className='w-32 y-32 mx-2' key={"photoMap" + photo.id} >
               <Tooltip id={ photo.id } place={ index % 2 == 0 ? 'top' : 'bottom' }/>
-              <PhotoItem photo={ photo }/>
+              <PhotoItem photo={ photo } isLoading= { isLoading }/>
             </div>
           )
         })}
