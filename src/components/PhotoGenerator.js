@@ -5,16 +5,27 @@ import confetti from "canvas-confetti";
 
 const PHOTO_URL = 'http://jsonplaceholder.typicode.com/photos';
 
+// Cache photos in local storage
 const cachePhotos = (photos) => {
   localStorage.setItem('photos', JSON.stringify(photos));
 };
 
+/**
+ * Retrieve cached photos from local storage
+ * @return {Array} an array contains the cachedPhotos.
+ * @return {null} if no photos were found.
+ */
 const getCachedPhotos = () => {
   const cachedPhotos = JSON.parse(localStorage.getItem('photos'));
   return cachedPhotos && cachedPhotos.length>0 ? cachedPhotos : null;
 };
 
-// A recursive function to randomize the photo list
+/**
+ * Randomly shuffle an array using the Fisher-Yates (Knuth) Shuffle algorithm.
+ * 
+ * @param {Array} array - The array to shuffle.
+ * @return {Array} The shuffled array.
+ */
 const randomizeArray = (array) => {
   const randomize = (arr, index) => {
     if (index === 0) return arr;
@@ -25,7 +36,11 @@ const randomizeArray = (array) => {
   return randomize([...array], array.length - 1);
 };
 
-// generate 50 unique number from 1-5000
+/**
+ * generate an array of 50 unique random numbers between 1 and 5000
+ * 
+ * @return {Array} An array contains the generated results.
+ */
 const generateUniqueIds = () => {
   const initialSet = new Set();
   while (initialSet.size < 50) {
@@ -36,6 +51,14 @@ const generateUniqueIds = () => {
   return initialArray;
 }
 
+/**
+ * generate an array of 50 unique random numbers between 1 and 5000
+ * @param {Array} url - The url for http request
+ * @param {number} retries - number of request
+ * @param {number} delay - amount of time for delay
+ * @return {Promise<Object>} A promise that resolves to the JSON response from the fetch request if successful.
+ *                           If all retries fail, the function will throw an error.
+ */
 const fetchWithRetry = async (url, retries, delay) => {
   for (let i = 0; i <= retries; i++) {
     try {
@@ -49,7 +72,10 @@ const fetchWithRetry = async (url, retries, delay) => {
   }
 };
 
-// add confetti to the button's location
+/**
+ * add confetti to the button's location
+ * @param {Ref} buttonRef - The ref of a button
+ */
 const triggerConfetti = (buttonRef) => {
   if (buttonRef.current) {
     const rect = buttonRef.current.getBoundingClientRect();
@@ -95,14 +121,15 @@ const PhotoGenerator = () => {
     }
   }, []);
 
-  // ensure only fetching new photos when new photoIds are given
+  // Run fetchPhotos whenever photoIds changes
   useEffect(() => {
     setIsLoading(true);
     if (photoIds.length > 0) {
       fetchPhotos();
     }
-  }, [photoIds]); // Runs fetchPhotos whenever photoIds changes
+  }, [photoIds]);
 
+  // Event handler for shuffling photos
   const handleShuffle = () => {
     const newArray = randomizeArray(photos);
     setPhotos(newArray);
@@ -110,6 +137,7 @@ const PhotoGenerator = () => {
     triggerConfetti(shuffleRef);
   };
 
+  // Event handler for regenerating photo IDs and fetching new photos
   const regeneratePhotos = () => {
     setPhotoIds(generateUniqueIds());
     triggerConfetti(regenerateRef);
