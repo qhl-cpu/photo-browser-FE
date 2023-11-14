@@ -155,7 +155,7 @@ const PhotoGenerator = () => {
           )
         })}
       </div>
-      <div className='flex items-center mt-4'>
+      <div className='flex flex-col sm:flex-row items-center mt-4'>
         <button ref={shuffleRef}
           className='mt-4 mx-5 w-48 h-16 bg-gradient-to-r from-teal-200 to-lime-200 rounded-lg cursor-pointer select-none
             active:translate-y-2 active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
